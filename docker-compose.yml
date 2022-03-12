@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+
+  app:
+    image: node:17.7.1
+    volumes:
+      - ./app:/app:cached
+    working_dir: /app
+    command: [/bin/sh, -c, yarn install --no-progress --network-timeout 1000000 && node index.js]
+    ports:
+      - 3000:3000
