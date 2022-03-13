@@ -13,14 +13,14 @@ app.get('/main.js', (req, res) => {
 })
 
 io.on('connection', (socket) => {
-  console.log('a user connected')
+  socket.broadcast.emit('addUser', socket.id)
 
-  socket.on('moveBall', (msg) => {
-    socket.broadcast.emit('broadcast', msg)
+  socket.on('moveBall', ({ id, x, y }) => {
+    socket.broadcast.emit('moveOtherBall', { id: id, x: x, y: y })
   })
 
   socket.on('disconnect', () => {
-    console.log('user disconnected')
+    socket.broadcast.emit('removeUser', socket.id)
   })
 })
 
