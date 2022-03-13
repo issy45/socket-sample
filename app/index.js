@@ -12,15 +12,32 @@ app.get('/main.js', (req, res) => {
   res.sendFile(__dirname + '/main.js')
 })
 
-io.on('connection', (socket) => {
-  socket.broadcast.emit('addUser', socket.id)
+const sharedObject = {
+  id: null,
+  x: 390,
+  y: 190,
+  color: 'yellow',
+}
 
-  socket.on('moveBall', ({ id, x, y }) => {
-    socket.broadcast.emit('moveOtherBall', { id: id, x: x, y: y })
-  })
+io.on('connection', (socket) => {
+  socket.emit('sharedObject', sharedObject)
+
+  socket.broadcast.emit('addUser', socket.id)
 
   socket.on('disconnect', () => {
     socket.broadcast.emit('removeUser', socket.id)
+  })
+
+  socket.on('movePlayer', ({ id, x, y }) => {
+    socket.broadcast.emit('moveOtherPlayer', { id: id, x: x, y: y })
+  })
+
+  socket.on('moveSharedObject', ({ dx, dy, color }) => {
+    sharedObject.x += dx
+    sharedObject.y += dy
+    sharedObject.color = color
+    socket.emit('sharedObject', sharedObject)
+    socket.broadcast.emit('sharedObject', sharedObject)
   })
 })
 
