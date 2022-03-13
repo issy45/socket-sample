@@ -78,7 +78,7 @@ document.addEventListener('keydown', (e) => {
   render()
 }, false)
 
-const addBall = (id, x, y) => {
+const addPlayer = (id, x, y) => {
   others[id] = {
     id: id,
     x: x,
@@ -98,12 +98,12 @@ const moveOtherPlayer = (id, x, y) => {
     others[id].x = x
     others[id].y = y
   } else {
-    addBall(id, x, y)
+    addPlayer(id, x, y)
   }
 }
 
 socket.on('addUser', (id) => {
-  addBall(id, 10, 10)
+  addPlayer(id, 10, 10)
   socket.emit('movePlayer', me)
 })
 
